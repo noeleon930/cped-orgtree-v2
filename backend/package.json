@@ -1,0 +1,22 @@
+{
+  "name": "cped-orgtree-v2-backend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "NoelBao",
+  "license": "UNLICENSE",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "compression": "^1.6.2",
+    "cors": "^2.8.1",
+    "cuid": "^1.3.8",
+    "express": "^4.15.2",
+    "helmet": "^3.5.0",
+    "jsonfile": "^2.4.0",
+    "morgan": "^1.8.1"
+  }
+}

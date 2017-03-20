@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>cped-org-tree-v2</title>
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.21.0/skin-lion/ui.fancytree.min.css">
+</head>
+
+<body>
+	<div>
+		<h4>可使用方向鍵瀏覽，比較方便 (左右各為收回與展開)</h4>
+		<h4>欲編輯請選擇項目之後按 F2，編輯完後按 Enter 即可儲存，或者按 Esc 以取消</h4>
+		<h4>欲刪除請選擇項目之後按 Del</h4>
+		<h4>欲新增職位請選擇位置後按 p，欲新增機關請選擇位置後按 q</h4>
+	</div>
+	<div id="tree" class="fancytree-connectors">
+	</div>
+	<button id="addNewDepartmentOutside" type="button" style="margin-top: 10px">於最外圍新增機關</button>
+
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.21.0/jquery.fancytree-all.min.js"></script>
+
+	<script type="text/javascript" src="./state.js"></script>
+	<script type="text/javascript" src="./function.js"></script>
+	<script type="text/javascript" src="./index.js"></script>
+</body>
+
+</html>
