@@ -25,6 +25,10 @@ function POST(url, data, callback, failback) {
 		.fail(failback)
 }
 
+function wordBetween(input, a, b) {
+	return input.split(a)[1].split(b)[0]
+}
+
 function OrgTree2FancyTree(originNodes) {
 	if (originNodes.constructor === Array) {
 		var result = []
@@ -36,7 +40,7 @@ function OrgTree2FancyTree(originNodes) {
 				position: false,
 				children: originNode.position.map(function (nameLevel) {
 					return {
-						title: nameLevel.name + '@' + (nameLevel.level === '' ? '空白' : nameLevel.level),
+						title: nameLevel.name + '（' + (nameLevel.level === '' ? '空白' : nameLevel.level) + '）',
 						position: true
 					}
 				})
@@ -65,11 +69,9 @@ function FancyTree2OrgTree(nodes, parentNode) {
 				return console.log('fuck!')
 			}
 
-			var nameLevel = node.title.split('@')
-
 			parentNode.position.push({
-				name: nameLevel[0],
-				level: nameLevel[1]
+				name: node.title.split('（')[0],
+				level: wordBetween(node.title, '（', '）')
 			})
 		} else if (node.data.position !== true && node.folder === true) { // 當遇到是 部門 時
 			var tmpNode = {
@@ -145,13 +147,13 @@ function loadTree(fancytreeData) {
 
 					if (tmpIndex === -1) {
 						return data.node.parent.addChildren([{
-							title: '職位@職務級別',
+							title: '職位（職務級別）',
 							position: true
 						}])
 					}
 
 					data.node.parent.addChildren([{
-						title: '職位@職務級別',
+						title: '職位（職務級別）',
 						position: true
 					}], tmpIndex)
 				}
@@ -159,7 +161,7 @@ function loadTree(fancytreeData) {
 				if (data.node.data.position === false) {
 					if (data.node.children === null || data.node.children === undefined) {
 						return data.node.addChildren([{
-							title: '職位@職務級別',
+							title: '職位（職務級別）',
 							position: true
 						}])
 					}
@@ -175,13 +177,13 @@ function loadTree(fancytreeData) {
 
 					if (tmpIndex_ === -1) {
 						return data.node.addChildren([{
-							title: '職位@職務級別',
+							title: '職位（職務級別）',
 							position: true
 						}])
 					}
 
 					data.node.addChildren([{
-						title: '職位@職務級別',
+						title: '職位（職務級別）',
 						position: true
 					}], tmpIndex_)
 				}
@@ -194,7 +196,7 @@ function loadTree(fancytreeData) {
 					position: false,
 					folder: true,
 					children: [{
-						title: '職位@職務級別',
+						title: '職位（職務級別）',
 						position: true
 					}]
 				}]
@@ -219,7 +221,7 @@ function loadTree(fancytreeData) {
 			position: false,
 			folder: true,
 			children: [{
-				title: '職位@職務級別',
+				title: '職位（職務級別）',
 				position: true
 			}]
 		}]
