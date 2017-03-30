@@ -11,7 +11,7 @@ const compression = require('compression')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 
-let GLOBAL_ORG_TREE = require('../data/orgtree.json')
+let GLOBAL_ORG_TREE = require('../data/all.json')
 
 const app = express()
 
@@ -32,7 +32,7 @@ app.post('/update-tree', (req, res) => {
 
 	GLOBAL_ORG_TREE = JSON.parse(req.body.tree)
 
-	jsonfile.writeFile(path.join(__dirname, '..', 'data', 'orgtree.json'), GLOBAL_ORG_TREE, err => {
+	jsonfile.writeFile(path.join(__dirname, '..', 'data', 'all.json'), GLOBAL_ORG_TREE, err => {
 		if (err) {
 			console.error(err)
 			return res.status(500).send(err)
