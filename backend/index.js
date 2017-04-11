@@ -18,9 +18,12 @@ const app = express()
 app.use(helmet())
 app.use(cors())
 app.use(compression())
-app.use(bodyParser.json())
+app.use(bodyParser.json({
+	limit: '64mb'
+}))
 app.use(bodyParser.urlencoded({
-	extended: true
+	extended: true,
+	limit: '64mb'
 }))
 app.use(morgan('common'))
 app.use(express.static(path.join(__dirname, '..', 'frontend')))
