@@ -40,7 +40,9 @@ function OrgTree2FancyTree(originNodes) {
 				position: false,
 				children: originNode.position.map(function (nameLevel) {
 					return {
-						title: nameLevel.name + '（' + (nameLevel.level === '' ? '空白' : nameLevel.level) + '）',
+						title: nameLevel.name + '（' + (nameLevel.level === '' ? '空白' : nameLevel.level) + '）' +
+							'【' + (nameLevel.extra === undefined || nameLevel.extra === '' ? '' : nameLevel.extra) + '】',
+						hightlighted: nameLevel.hightlighted === undefined || nameLevel.hightlighted === false ? false : true,
 						position: true
 					}
 				})
@@ -71,7 +73,9 @@ function FancyTree2OrgTree(nodes, parentNode) {
 
 			parentNode.position.push({
 				name: node.title.split('（')[0],
-				level: wordBetween(node.title, '（', '）')
+				level: wordBetween(node.title, '（', '）'),
+				extra: wordBetween(node.title, '【', '】'),
+				hightlighted: node.data.hightlighted
 			})
 		} else if (node.data.position !== true && node.folder === true) { // 當遇到是 部門 時
 			var tmpNode = {
@@ -147,13 +151,13 @@ function loadTree(fancytreeData) {
 
 					if (tmpIndex === -1) {
 						return data.node.parent.addChildren([{
-							title: '職位（職務級別）',
+							title: '職位（職務級別）【】',
 							position: true
 						}])
 					}
 
 					data.node.parent.addChildren([{
-						title: '職位（職務級別）',
+						title: '職位（職務級別）【】',
 						position: true
 					}], tmpIndex)
 				}
@@ -161,7 +165,7 @@ function loadTree(fancytreeData) {
 				if (data.node.data.position === false) {
 					if (data.node.children === null || data.node.children === undefined) {
 						return data.node.addChildren([{
-							title: '職位（職務級別）',
+							title: '職位（職務級別）【】',
 							position: true
 						}])
 					}
@@ -177,13 +181,13 @@ function loadTree(fancytreeData) {
 
 					if (tmpIndex_ === -1) {
 						return data.node.addChildren([{
-							title: '職位（職務級別）',
+							title: '職位（職務級別）【】',
 							position: true
 						}])
 					}
 
 					data.node.addChildren([{
-						title: '職位（職務級別）',
+						title: '職位（職務級別）【】',
 						position: true
 					}], tmpIndex_)
 				}
@@ -196,7 +200,7 @@ function loadTree(fancytreeData) {
 					position: false,
 					folder: true,
 					children: [{
-						title: '職位（職務級別）',
+						title: '職位（職務級別）【】',
 						position: true
 					}]
 				}]
@@ -209,6 +213,18 @@ function loadTree(fancytreeData) {
 					data.node.addChildren(tmpNode)
 				}
 			}
+
+			// HIGHLIGHT
+			if (ev.keyCode === 72) {
+				if (data.node.data.position === true) {
+					data.node.toggleClass('fancytree-highlight')
+					data.node.data.hightlighted = !data.node.data.hightlighted
+					var orgtree_ = FancyTree2OrgTree(getCurrentTreeData(data))
+					updateTree(orgtree_)
+				}
+			}
+
+			// console.log(ev.keyCode)
 		},
 		source: fancytreeData
 	})
@@ -221,7 +237,7 @@ function loadTree(fancytreeData) {
 			position: false,
 			folder: true,
 			children: [{
-				title: '職位（職務級別）',
+				title: '職位（職務級別）【】',
 				position: true
 			}]
 		}]
@@ -229,7 +245,35 @@ function loadTree(fancytreeData) {
 		root.addChildren(tmpNode)
 	})
 
+	var expanded = false
+	jQuery('#expandAll').on('click', function () {
+		var root = jQuery('#tree').fancytree('getRootNode')
+
+		expanded = !expanded
+
+		root.children.forEach(function (child) {
+			child.setExpanded(expanded)
+			child.visit(function (node) {
+				if (node.data.position !== true && node.folder === true) {
+					node.setExpanded(expanded)
+				}
+			})
+		})
+	})
+
+	jQuery('#printAll').on('click', function () {
+		window.open(window.location.href + 'print.html')
+	})
+
 	var root = jQuery('#tree').fancytree('getRootNode')
 	root.children[0].setExpanded(true)
 	root.children[0].setFocus(true)
+
+	root.children.forEach(function (child) {
+		child.visit(function (node) {
+			if (node.data.hightlighted === true) {
+				node.addClass('fancytree-highlight')
+			}
+		})
+	})
 }

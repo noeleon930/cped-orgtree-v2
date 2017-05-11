@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>列印頁</title>
+    <style>
+        .tree,
+        .tree ul {
+            margin: 0 0 0 1em;
+            /* indentation */
+            padding: 0;
+            list-style: none;
+            color: #369;
+            position: relative;
+        }
+
+        .tree ul {
+            margin-left: .5em
+        }
+        /* (indentation/2) */
+
+        .tree:before,
+        .tree ul:before {
+            content: "";
+            display: block;
+            width: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            border-left: 1px solid;
+        }
+
+        .tree li {
+            margin: 0;
+            padding: 0 1.5em;
+            /* indentation + .5em */
+            line-height: 2em;
+            /* default list item's `line-height` */
+            font-weight: bold;
+            position: relative;
+        }
+
+        .tree li:before {
+            content: "";
+            display: block;
+            width: 10px;
+            /* same with indentation */
+            height: 0;
+            border-top: 1px solid;
+            margin-top: -1px;
+            /* border top width */
+            position: absolute;
+            top: 1em;
+            /* (line-height/2) */
+            left: 0;
+        }
+
+        .tree li:last-child:before {
+            background: white;
+            /* same with body background */
+            height: auto;
+            top: 1em;
+            /* (line-height/2) */
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="target">
+        <ul class="tree">
+
+        </ul>
+    </div>
+    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+        $(function () {
+            GET('/get-tree', function (res) {
+                console.dir(res)
+                var htmlCode = makeTree(res)
+                $('.tree').html(htmlCode)
+            })
+        })
+
+        function GET(url, callback, failback) {
+            return jQuery
+                .ajax(url, {
+                    method: 'GET',
+                    cache: false,
+                    crossDomain: true
+                })
+                .done(callback)
+                .fail(failback)
+        }
+
+        function makeTree(nodes) {
+            var str = ''
+
+            nodes.forEach(function (node) {
+                str += '<li>' + node.department
+
+                if (node.position.length > 0 || node.children.length > 0) {
+                    str += '<ul>'
+                }
+
+                if (node.position.length > 0) {
+                    node.position.forEach(function (p) {
+                        str += '<li>' + p.name + '（' + (p.level === '' ? '空白' : p.level) + '）' +
+                            '【' + (p.extra === undefined || p.extra === '' ? '' : p.extra) + '】' +
+                            '</li>'
+                    })
+                }
+
+                if (node.children.length > 0) {
+                    str += makeTree(node.children)
+                }
+
+                if (node.position.length > 0 || node.children.length > 0) {
+                    str += '</ul>'
+                }
+
+                str += '</li>'
+            })
+
+            return str
+        }
+    </script>
+</body>
+
+</html>
